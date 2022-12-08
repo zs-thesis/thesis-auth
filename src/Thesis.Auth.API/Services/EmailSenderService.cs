@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
 using Thesis.Auth.Models;

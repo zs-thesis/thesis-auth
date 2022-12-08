@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Thesis.Auth.Models;
 
 namespace Thesis.Auth.Services;
