@@ -3,13 +3,8 @@ namespace Thesis.Auth.Models;
 /// <summary>
 /// Модель пользователя
 /// </summary>
-public class User
+public abstract class User : Entity
 {
-	/// <summary>
-	/// Идентификатор тикета
-	/// </summary>
-	public Guid Id { get; set; }
-	
 	/// <summary>
 	/// Номер телефона
 	/// </summary>

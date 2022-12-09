@@ -45,7 +45,7 @@ public class AuthTicket
 			Code = new Random().Next(100000, 999999).ToString(),
 			Login = login,
 			DeviceDescription = deviceDescription,
-			ExpiresAt = DateTime.UtcNow.AddMinutes(16)
+			ExpiresAt = DateTime.UtcNow.AddMinutes(10)
 		};
 	}
 }

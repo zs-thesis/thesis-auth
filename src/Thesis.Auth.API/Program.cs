@@ -33,6 +33,9 @@ if (codeSenderType == "Email")
 	builder.Services.AddSingleton<ICodeSender>(new EmailSenderService(smtpClientOptions));
 }
 
+builder.Services.AddOptions<JwtOptions>()
+	.Bind(builder.Configuration.GetSection(nameof(JwtOptions)));
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

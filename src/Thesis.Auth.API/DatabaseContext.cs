@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Thesis.Auth.Models;
 
@@ -17,9 +16,19 @@ public sealed class DatabaseContext : DbContext
     public DbSet<AuthTicket> AuthTickets { get; set; } = null!;
     
     /// <summary>
-    /// Коллекция пользователей
+    /// Коллекция клиентов
     /// </summary>
-    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Client> Clients { get; set; } = null!;
+
+    /// <summary>
+    /// Коллекция сотрудников
+    /// </summary>
+    public DbSet<Employee> Employees { get; set; } = null!;
+
+    /// <summary>
+    /// Коллекция приложений
+    /// </summary>
+    public DbSet<ApiConsumer> ApiConsumers { get; set; } = null!;
 
     #endregion
     
@@ -50,14 +59,37 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.ExpiresAt).IsRequired().HasDefaultValueSql("now()");
         });
         
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<Client>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Phone).IsRequired();
             entity.Property(e => e.Email).IsRequired();
             entity.Property(e => e.Name).IsRequired();
             entity.Property(e => e.Surname).IsRequired();
+            entity.Property(e => e.Note);
             entity.Property(e => e.Patronymic);
+            entity.Property(e => e.Created).IsRequired().HasDefaultValueSql("now()");
+        });
+        
+        modelBuilder.Entity<Employee>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Phone).IsRequired();
+            entity.Property(e => e.Email).IsRequired();
+            entity.Property(e => e.Name).IsRequired();
+            entity.Property(e => e.Surname).IsRequired();
+            entity.Property(e => e.Role).IsRequired();
+            entity.Property(e => e.Note);
+            entity.Property(e => e.Patronymic);
+            entity.Property(e => e.Created).IsRequired().HasDefaultValueSql("now()");
+        });
+        
+        modelBuilder.Entity<ApiConsumer>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired();
+            entity.Property(e => e.Note);
+            entity.Property(e => e.Created).IsRequired().HasDefaultValueSql("now()");
         });
         
         base.OnModelCreating(modelBuilder);

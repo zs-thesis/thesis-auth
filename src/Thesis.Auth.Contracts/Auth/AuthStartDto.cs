@@ -1,4 +1,4 @@
-namespace Thesis.Auth.Contracts;
+namespace Thesis.Auth.Contracts.Auth;
 
 /// <summary>
 /// Модель данных для старта авторизации
