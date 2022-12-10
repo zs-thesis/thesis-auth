@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thesis.Auth.API", "src\Thes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thesis.Auth.Models", "src\Thesis.Auth.Models\Thesis.Auth.Models.csproj", "{8DE7DD2C-2DFC-43C0-8FCA-DEE98F5FB78E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thesis.Services.Common", "..\thesis-services-common\src\Thesis.Services.Common\Thesis.Services.Common.csproj", "{75421A92-36AD-447F-8B8C-3FCCC9A84F6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,10 +30,15 @@ Global
 		{8DE7DD2C-2DFC-43C0-8FCA-DEE98F5FB78E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DE7DD2C-2DFC-43C0-8FCA-DEE98F5FB78E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DE7DD2C-2DFC-43C0-8FCA-DEE98F5FB78E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75421A92-36AD-447F-8B8C-3FCCC9A84F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75421A92-36AD-447F-8B8C-3FCCC9A84F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75421A92-36AD-447F-8B8C-3FCCC9A84F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75421A92-36AD-447F-8B8C-3FCCC9A84F6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7DD51DCA-626A-4F6C-89E3-CD49C78815D5} = {290E99C5-07EB-4CD4-958B-2FC086EBC4D2}
 		{88CF2850-3530-4733-8E5C-124BCCAFE099} = {290E99C5-07EB-4CD4-958B-2FC086EBC4D2}
 		{8DE7DD2C-2DFC-43C0-8FCA-DEE98F5FB78E} = {290E99C5-07EB-4CD4-958B-2FC086EBC4D2}
+		{75421A92-36AD-447F-8B8C-3FCCC9A84F6D} = {290E99C5-07EB-4CD4-958B-2FC086EBC4D2}
 	EndGlobalSection
 EndGlobal

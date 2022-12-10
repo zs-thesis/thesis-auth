@@ -7,13 +7,17 @@
         <RootNamespace>Thesis.Auth</RootNamespace>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\net6.0\Thesis.Auth.API.xml</DocumentationFile>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="MailKit" Version="3.4.3" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.3" />
 
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.11" />
-        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.13.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.11" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.1" />
 
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.3">
@@ -28,10 +32,12 @@
         <PackageReference Include="MimeKit" Version="3.4.3" />
         <PackageReference Include="Npgsql" Version="6.0.3" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.3" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\thesis-services-common\src\Thesis.Services.Common\Thesis.Services.Common.csproj" />
+      <ProjectReference Include="..\Thesis.Auth.Contracts\Thesis.Auth.Contracts.csproj" />
       <ProjectReference Include="..\Thesis.Auth.Models\Thesis.Auth.Models.csproj" />
     </ItemGroup>
 

@@ -69,6 +69,17 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.Note);
             entity.Property(e => e.Patronymic);
             entity.Property(e => e.Created).IsRequired().HasDefaultValueSql("now()");
+
+            entity.HasData(new Client
+            {
+                Id = Guid.NewGuid(),
+                Phone = "79887893991",
+                Email = "seljmov@list.ru",
+                Name = "Загидин",
+                Surname = "Селимов",
+                Note = "Создан автоматически",
+                Created = DateTime.UtcNow,
+            });
         });
         
         modelBuilder.Entity<Employee>(entity =>
@@ -82,6 +93,18 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.Note);
             entity.Property(e => e.Patronymic);
             entity.Property(e => e.Created).IsRequired().HasDefaultValueSql("now()");
+            
+            entity.HasData(new Employee
+            {
+                Id = Guid.NewGuid(),
+                Phone = "79887893991",
+                Email = "seljmov@list.ru",
+                Name = "Загидин",
+                Surname = "Селимов",
+                Note = "Создан автоматически",
+                Role = EmployeeRoles.Admin,
+                Created = DateTime.UtcNow,
+            });
         });
         
         modelBuilder.Entity<ApiConsumer>(entity =>

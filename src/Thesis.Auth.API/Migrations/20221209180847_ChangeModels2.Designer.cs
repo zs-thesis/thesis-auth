@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Thesis.Auth;
@@ -11,9 +12,10 @@ using Thesis.Auth;
 namespace Thesis.Auth.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221209180847_ChangeModels2")]
+    partial class ChangeModels2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +32,7 @@ namespace Thesis.Auth.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("Name")
@@ -60,7 +62,7 @@ namespace Thesis.Auth.Migrations
 
                     b.Property<DateTime>("ExpiresAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("Login")
@@ -80,7 +82,7 @@ namespace Thesis.Auth.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("Email")
@@ -108,18 +110,6 @@ namespace Thesis.Auth.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Clients");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("8827c40d-81a7-4131-a3a3-9450e8b6b704"),
-                            Created = new DateTime(2022, 12, 10, 19, 42, 32, 935, DateTimeKind.Utc).AddTicks(2340),
-                            Email = "seljmov@list.ru",
-                            Name = "Загидин",
-                            Note = "Создан автоматически",
-                            Phone = "79887893991",
-                            Surname = "Селимов"
-                        });
                 });
 
             modelBuilder.Entity("Thesis.Auth.Models.Employee", b =>
@@ -130,7 +120,7 @@ namespace Thesis.Auth.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("Email")
@@ -161,19 +151,6 @@ namespace Thesis.Auth.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("3ea96f46-5de6-4d89-be43-bcc95f19ddf0"),
-                            Created = new DateTime(2022, 12, 10, 19, 42, 32, 935, DateTimeKind.Utc).AddTicks(2840),
-                            Email = "seljmov@list.ru",
-                            Name = "Загидин",
-                            Note = "Создан автоматически",
-                            Phone = "79887893991",
-                            Role = 0,
-                            Surname = "Селимов"
-                        });
                 });
 #pragma warning restore 612, 618
         }
