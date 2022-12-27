@@ -1,5 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Thesis.Services.Common.Options;
@@ -11,25 +13,26 @@ namespace Thesis.Auth.Helpers;
 /// </summary>
 public class JwtCreator
 {
+    private const int RefreshTokenLength = 64;
     private readonly IOptions<JwtOptions> _jwtOptions;
 
     /// <summary>
     /// Конструктор класса <see cref="JwtCreator"/>
     /// </summary>
-    /// <param name="jwtOptions"></param>
+    /// <param name="jwtOptions">Настройки jwt</param>
     public JwtCreator(IOptions<JwtOptions> jwtOptions)
     {
         _jwtOptions = jwtOptions;
     }
     
     /// <summary>
-    /// Создать Jwt-токен
+    /// Создать токен доступа
     /// </summary>
     /// <param name="id">Идентификатор потребителя</param>
     /// <param name="login">Логин (наименование) потребителя</param>
     /// <param name="minutesValid">Время действия токена</param>
-    /// <returns></returns>
-    public string Create(Guid id, string login, int minutesValid)
+    /// <returns>Токен доступа</returns>
+    public string CreateAccessToken(Guid id, string login, int minutesValid)
     {
         var subject = new ClaimsIdentity(new[]
         {
@@ -51,5 +54,18 @@ public class JwtCreator
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
+    }
+
+    /// <summary>
+    /// Создать токен обновления
+    /// </summary>
+    /// <returns>Токен обновления</returns>
+    public string CreateRefreshToken()
+    {
+        var token = RandomNumberGenerator.GetBytes(RefreshTokenLength);
+        using var sha = SHA256.Create();
+        var bytes = Encoding.UTF8.GetBytes(Convert.ToBase64String(token));
+        var hash = sha.ComputeHash(bytes);
+        return Convert.ToBase64String(hash);
     }
 }

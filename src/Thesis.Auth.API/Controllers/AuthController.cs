@@ -105,8 +105,8 @@ public class AuthController : ControllerBase
 
         var tokens = new TokensDto
         {
-            AccessToken = _jwtCreator.Create(client.Id, client.Phone, _jwtOptions.Value.AccessTokenLifetime),
-            RefreshToken = _jwtCreator.Create(client.Id, client.Phone, _jwtOptions.Value.RefreshTokenLifetime),
+            AccessToken = _jwtCreator.CreateAccessToken(client.Id, client.Phone, _jwtOptions.Value.AccessTokenLifetime),
+            RefreshToken = _jwtCreator.CreateRefreshToken(),
         };
         return Ok(tokens);
     }
