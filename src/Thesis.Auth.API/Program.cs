@@ -14,8 +14,18 @@ builder.Services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(conn
 var codeSenderType = builder.Configuration.GetValue<string>("CodeSenderType");
 if (codeSenderType == "Email")
 {
-	var smtpClientOptions = builder.Configuration.GetSection("SmtpClientOptions").Get<SmtpClientOptions>()!;
-	builder.Services.AddSingleton<ICodeSender>(new EmailSenderService(smtpClientOptions));
+	var smtpClientOptions = builder.Configuration.GetSection(nameof(SmtpClientOptions)).Get<SmtpClientOptions>();
+	if (smtpClientOptions == null)
+	{
+		throw new Exception("SmtpClientOptions is null");
+	}
+	
+	var codeTemplateOptions = builder.Configuration.GetSection(nameof(CodeTemplateOptions)).Get<CodeTemplateOptions>();
+	if (codeTemplateOptions == null)
+	{
+		throw new Exception("CodeTemplateOptions is null");
+	}
+	builder.Services.AddSingleton<ICodeSender>(new EmailSenderService(smtpClientOptions, codeTemplateOptions));
 }
 
 builder.Services.AddSingleton<JwtCreator>();

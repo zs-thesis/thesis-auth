@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Thesis.Auth;
@@ -11,9 +12,10 @@ using Thesis.Auth;
 namespace Thesis.Auth.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221228065310_RedesignedDB")]
+    partial class RedesignedDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,10 +61,16 @@ namespace Thesis.Auth.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ClientId")
-                        .HasColumnType("uuid");
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValue(new DateTime(2022, 12, 28, 6, 53, 10, 443, DateTimeKind.Utc).AddTicks(80));
 
                     b.Property<string>("Director")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -78,12 +86,46 @@ namespace Thesis.Auth.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Note")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RefreshTokenExpires")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Role")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
                     b.Property<string>("Site")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("f6fcbed5-791c-4c1f-9c14-4ba03644bbf8"),
+                            ActualAddress = "г. Астрахань, Бакинская 79Б",
+                            Created = new DateTime(2022, 12, 28, 6, 53, 10, 443, DateTimeKind.Utc).AddTicks(720),
+                            Director = "Загидин Селимов",
+                            Email = "seljmov@list.ru",
+                            Inn = "1234567890",
+                            LegalAddress = "г. Астрахань, Бакинская 79Б",
+                            Name = "Thesis LLC",
+                            Note = "Создано автоматически",
+                            Phone = "79887893991",
+                            Role = 0
+                        });
                 });
 
             modelBuilder.Entity("Thesis.Auth.Models.User", b =>
@@ -95,7 +137,7 @@ namespace Thesis.Auth.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2022, 12, 29, 16, 26, 16, 643, DateTimeKind.Utc).AddTicks(9790));
+                        .HasDefaultValue(new DateTime(2022, 12, 28, 6, 53, 10, 442, DateTimeKind.Utc).AddTicks(9160));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -135,8 +177,8 @@ namespace Thesis.Auth.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("75c87167-8c68-4bdd-b2c9-cae762896104"),
-                            Created = new DateTime(2022, 12, 29, 16, 26, 16, 644, DateTimeKind.Utc).AddTicks(150),
+                            Id = new Guid("c3ee57a8-60fe-4811-95a1-4c374efad8c4"),
+                            Created = new DateTime(2022, 12, 28, 6, 53, 10, 442, DateTimeKind.Utc).AddTicks(9540),
                             Email = "seljmov@list.ru",
                             Name = "Загидин",
                             Note = "Создано автоматически",

@@ -54,11 +54,11 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> AuthStart([FromBody] AuthStartDto startDto, [FromServices] ICodeSender codeSender)
     {
         if (string.IsNullOrEmpty(startDto.Login))
-            return BadRequest();
+            return BadRequest($"Поле {nameof(startDto.Login)} не может быть пустым");
 
-        var client = await _context.Clients.FirstOrDefaultAsync(c => c.Phone == startDto.Login || c.Email == startDto.Login);
-        if (client == null)
-            return NotFound();
+        var user = await _context.Users.FirstOrDefaultAsync(c => c.Phone == startDto.Login || c.Email == startDto.Login);
+        if (user is null)
+            return NotFound($"Пользователь с логином {startDto.Login} не найден");
         
         var ticket = AuthTicket.Create(startDto.Login);
         try
@@ -68,10 +68,10 @@ public class AuthController : ControllerBase
             await _context.SaveChangesAsync();
             return Ok(new TicketDto { Ticket = ticket.Id.ToString() });
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            _logger.LogError(e.ToString());
-            throw;
+            _logger.LogError(ex, "Ошибка отправки кода");
+            return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
     
@@ -88,25 +88,31 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(AuthCompleteDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public IActionResult AuthComplete([FromBody] AuthCompleteDto completeDto)
+    public async Task<IActionResult> AuthComplete([FromBody] AuthCompleteDto completeDto)
     {
         if (string.IsNullOrEmpty(completeDto.Ticket) ||
             !Guid.TryParse(completeDto.Ticket, out var ticketId) ||
             string.IsNullOrEmpty(completeDto.Code))
-            return BadRequest();
+            return BadRequest($"Некорректный тикет или код");
 
         var ticket = _context.AuthTickets.FirstOrDefault(t => t.Id == ticketId);
         if (ticket == null || ticket.Code != completeDto.Code)
-            return NotFound(completeDto.Ticket);
+            return NotFound($"Не найден тикет или код не совпадает. TicketId: {ticketId}, Code: {completeDto.Code}");
 
-        var client = _context.Clients.FirstOrDefault(c => c.Phone == ticket.Login || c.Email == ticket.Login);
-        if (client == null)
-            return NotFound(ticket.Login);
+        var user = _context.Users.FirstOrDefault(c => c.Phone == ticket.Login || c.Email == ticket.Login);
+        if (user is null)
+            return NotFound($"Пользователь с логином {ticket.Login} не найден");
+
+        user.RefreshToken = _jwtCreator.CreateRefreshToken();
+        user.RefreshTokenExpires = DateTime.UtcNow.AddMinutes(_jwtOptions.Value.RefreshTokenLifetime);
+        _context.Users.Update(user);
+        _context.AuthTickets.Remove(ticket);
+        await _context.SaveChangesAsync();
 
         var tokens = new TokensDto
         {
-            AccessToken = _jwtCreator.CreateAccessToken(client.Id, client.Phone, _jwtOptions.Value.AccessTokenLifetime),
-            RefreshToken = _jwtCreator.CreateRefreshToken(),
+            AccessToken = _jwtCreator.CreateAccessToken(user.Id, ticket.Login, _jwtOptions.Value.AccessTokenLifetime),
+            RefreshToken = user.RefreshToken,
         };
         return Ok(tokens);
     }

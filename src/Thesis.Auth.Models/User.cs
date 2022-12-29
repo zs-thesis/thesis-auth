@@ -3,18 +3,8 @@ namespace Thesis.Auth.Models;
 /// <summary>
 /// Модель пользователя
 /// </summary>
-public abstract class User : Entity
+public class User : Client
 {
-	/// <summary>
-	/// Номер телефона
-	/// </summary>
-	public string Phone { get; set; } = string.Empty;
-
-	/// <summary>
-	/// Адрес электронной почты
-	/// </summary>
-	public string Email { get; set; } = string.Empty;
-	
 	/// <summary>
 	/// Имя
 	/// </summary>

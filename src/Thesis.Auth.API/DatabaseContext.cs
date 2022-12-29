@@ -16,20 +16,15 @@ public sealed class DatabaseContext : DbContext
     public DbSet<AuthTicket> AuthTickets { get; set; } = null!;
     
     /// <summary>
-    /// Коллекция клиентов
+    /// Коллекция пользователей
     /// </summary>
-    public DbSet<Client> Clients { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 
     /// <summary>
-    /// Коллекция сотрудников
+    /// Коллекция компаний-партнеров
     /// </summary>
-    public DbSet<Employee> Employees { get; set; } = null!;
-
-    /// <summary>
-    /// Коллекция приложений
-    /// </summary>
-    public DbSet<ApiConsumer> ApiConsumers { get; set; } = null!;
-
+    public DbSet<Company> Companies { get; set; } = null!;
+    
     #endregion
     
     /// <summary>
@@ -59,62 +54,45 @@ public sealed class DatabaseContext : DbContext
             entity.Property(e => e.ExpiresAt).IsRequired().HasDefaultValueSql("now()");
         });
         
-        modelBuilder.Entity<Client>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Phone).IsRequired();
-            entity.Property(e => e.Email).IsRequired();
-            entity.Property(e => e.Name).IsRequired();
-            entity.Property(e => e.Surname).IsRequired();
-            entity.Property(e => e.Note);
-            entity.Property(e => e.Patronymic);
-            entity.Property(e => e.Created).IsRequired().HasDefaultValueSql("now()");
-
-            entity.HasData(new Client
-            {
-                Id = Guid.NewGuid(),
-                Phone = "79887893991",
-                Email = "seljmov@list.ru",
-                Name = "Загидин",
-                Surname = "Селимов",
-                Note = "Создан автоматически",
-                Created = DateTime.UtcNow,
-            });
-        });
-        
-        modelBuilder.Entity<Employee>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Phone).IsRequired();
-            entity.Property(e => e.Email).IsRequired();
-            entity.Property(e => e.Name).IsRequired();
-            entity.Property(e => e.Surname).IsRequired();
             entity.Property(e => e.Role).IsRequired();
             entity.Property(e => e.Note);
+            entity.Property(e => e.RefreshToken);
+            entity.Property(e => e.RefreshTokenExpires);
+            entity.Property(e => e.Created).IsRequired().HasDefaultValue(DateTime.UtcNow);
+            entity.Property(e => e.Phone).IsRequired();
+            entity.Property(e => e.Email).IsRequired();
+            entity.Property(e => e.Name).IsRequired();
+            entity.Property(e => e.Surname).IsRequired();
             entity.Property(e => e.Patronymic);
-            entity.Property(e => e.Created).IsRequired().HasDefaultValueSql("now()");
-            
-            entity.HasData(new Employee
+
+            entity.HasData(new User
             {
                 Id = Guid.NewGuid(),
+                Role = Roles.Administator,
+                Note = "Создано автоматически",
                 Phone = "79887893991",
                 Email = "seljmov@list.ru",
                 Name = "Загидин",
                 Surname = "Селимов",
-                Note = "Создан автоматически",
-                Role = EmployeeRoles.Admin,
                 Created = DateTime.UtcNow,
             });
         });
         
-        modelBuilder.Entity<ApiConsumer>(entity =>
+        modelBuilder.Entity<Company>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.ClientId);
             entity.Property(e => e.Name).IsRequired();
-            entity.Property(e => e.Note);
-            entity.Property(e => e.Created).IsRequired().HasDefaultValueSql("now()");
+            entity.Property(e => e.Inn).IsRequired();
+            entity.Property(e => e.LegalAddress).IsRequired();
+            entity.Property(e => e.ActualAddress).IsRequired();
+            entity.Property(e => e.Site);
+            entity.Property(e => e.Director).IsRequired();
         });
-        
+
         base.OnModelCreating(modelBuilder);
     }
 }
