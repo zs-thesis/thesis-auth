@@ -29,15 +29,13 @@ public class JwtCreator
     /// Создать токен доступа
     /// </summary>
     /// <param name="id">Идентификатор потребителя</param>
-    /// <param name="login">Логин (наименование) потребителя</param>
     /// <param name="minutesValid">Время действия токена</param>
     /// <returns>Токен доступа</returns>
-    public string CreateAccessToken(Guid id, string login, int minutesValid)
+    public string CreateAccessToken(Guid id, int minutesValid)
     {
         var subject = new ClaimsIdentity(new[]
         {
             new Claim(ClaimsIdentity.DefaultNameClaimType, id.ToString()),
-            new Claim(ClaimTypes.GivenName, login)
         });
     
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -60,7 +58,7 @@ public class JwtCreator
     /// Создать токен обновления
     /// </summary>
     /// <returns>Токен обновления</returns>
-    public string CreateRefreshToken()
+    public static string CreateRefreshToken()
     {
         var token = RandomNumberGenerator.GetBytes(RefreshTokenLength);
         using var sha = SHA256.Create();

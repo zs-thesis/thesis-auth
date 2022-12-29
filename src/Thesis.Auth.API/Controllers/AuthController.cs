@@ -103,7 +103,7 @@ public class AuthController : ControllerBase
         if (user is null)
             return NotFound($"Пользователь с логином {ticket.Login} не найден");
 
-        user.RefreshToken = _jwtCreator.CreateRefreshToken();
+        user.RefreshToken = JwtCreator.CreateRefreshToken();
         user.RefreshTokenExpires = DateTime.UtcNow.AddMinutes(_jwtOptions.Value.RefreshTokenLifetime);
         _context.Users.Update(user);
         _context.AuthTickets.Remove(ticket);
@@ -111,7 +111,45 @@ public class AuthController : ControllerBase
 
         var tokens = new TokensDto
         {
-            AccessToken = _jwtCreator.CreateAccessToken(user.Id, ticket.Login, _jwtOptions.Value.AccessTokenLifetime),
+            AccessToken = _jwtCreator.CreateAccessToken(user.Id, _jwtOptions.Value.AccessTokenLifetime),
+            RefreshToken = user.RefreshToken,
+        };
+        return Ok(tokens);
+    }
+
+    /// <summary>
+    /// Обновляет токены с использованием валидного токена обновления. 
+    /// </summary>
+    /// <param name="refreshTokensDto">Данные токена обновления</param>
+    /// <response code="200">Токены успешно обновлены</response>
+    /// <response code="400">Передан некорректный токен обновления</response>
+    /// <response code="401">Токен обновления устарел</response>
+    /// <response code="500">Ошибка сервера</response>
+    [HttpPost("refresh")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokensDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(RefreshTokensDto))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> RefreshTokens([FromBody] RefreshTokensDto refreshTokensDto)
+    {
+        if (string.IsNullOrEmpty(refreshTokensDto.RefreshToken))
+            return BadRequest($"Поле {nameof(refreshTokensDto.RefreshToken)} не может быть пустым");
+        
+        var user = _context.Users.FirstOrDefault(c => c.RefreshToken == refreshTokensDto.RefreshToken);
+        if (user is null)
+            return NotFound($"Пользователь с токеном обновления {refreshTokensDto.RefreshToken} не найден");
+        
+        if (user.RefreshTokenExpires < DateTime.UtcNow)
+            return Unauthorized($"Токен обновления устарел");
+        
+        user.RefreshToken = JwtCreator.CreateRefreshToken();
+        user.RefreshTokenExpires = DateTime.UtcNow.AddMinutes(_jwtOptions.Value.RefreshTokenLifetime);
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        var tokens = new TokensDto
+        {
+            AccessToken = _jwtCreator.CreateAccessToken(user.Id, _jwtOptions.Value.AccessTokenLifetime),
             RefreshToken = user.RefreshToken,
         };
         return Ok(tokens);
