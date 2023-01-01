@@ -10,4 +10,8 @@
       <DocumentationFile>bin\Debug\net6.0\Thesis.Auth.Contracts.xml</DocumentationFile>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Thesis.Auth.Models\Thesis.Auth.Models.csproj" />
+    </ItemGroup>
+
 </Project>

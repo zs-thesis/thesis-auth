@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Thesis.Auth.Contracts;
 using Thesis.Auth.Contracts.Auth;
 using Thesis.Auth.Helpers;
 using Thesis.Auth.Models;
@@ -66,7 +65,11 @@ public class AuthController : ControllerBase
             await codeSender.Send(ticket);
             await _context.AuthTickets.AddAsync(ticket);
             await _context.SaveChangesAsync();
-            return Ok(new TicketDto { Ticket = ticket.Id.ToString() });
+            return Ok(new TicketDto
+            {
+                Name = user.Name,
+                Ticket = ticket.Id.ToString()
+            });
         }
         catch (Exception ex)
         {
